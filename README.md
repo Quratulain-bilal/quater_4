@@ -1,6 +1,6 @@
 # What is Generative AI? 
 
-![Magic Robot Artist](https://inbre.uidaho.edu/wp-content/uploads/2024/10/generative-ai.jpg) 
+![Magic Robot Artist](https://stelligence.com/wp-content/uploads/2023/03/Generative-AI.jpg) 
 
 Generative AI is like a magic robot artist that creates brand-new things—think stories, pictures, music, videos, or even computer code—based on what it has learned from tons of examples. Imagine you give this robot a simple instruction, like "Draw a cat flying in space," and it whips up a cool, realistic image in seconds. That's generative AI! It doesn't just copy stuff; it invents new content by understanding patterns in data, like how humans learn to draw or write by practicing.
 
