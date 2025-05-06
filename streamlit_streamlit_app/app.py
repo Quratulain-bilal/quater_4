@@ -1,9 +1,5 @@
 import streamlit as st
 import pandas as pd
-from PIL import Image
-import random
-import os
-import base64
 import plotly.express as px
 
 # App config
@@ -11,18 +7,19 @@ st.set_page_config(
     page_title="Generative AI Explorer",
     page_icon="🧠",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="auto"
 )
 
-# Custom CSS with Tailwind CDN
+# Custom CSS with Tailwind CDN and mobile responsiveness
 st.markdown("""
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <style>
     .stApp {
         background-color: #f5f5f5;
     }
     .section {
-        @apply bg-white rounded-lg p-6 mb-6 shadow-md hover:shadow-lg transition-shadow duration-300;
+        @apply bg-white rounded-lg p-6 mb-6 shadow-md hover:shadow-lg transition-shadow duration-300 w-full;
     }
     .model-card {
         @apply border-l-4 border-blue-500 pl-4;
@@ -44,6 +41,38 @@ st.markdown("""
     }
     .btn-primary {
         @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors;
+    }
+    img {
+        @apply w-full h-auto rounded-lg;
+    }
+    /* Mobile-specific styles */
+    @media (max-width: 640px) {
+        .section {
+            padding: 1rem;
+        }
+        .text-4xl {
+            font-size: 1.5rem;
+        }
+        .text-3xl {
+            font-size: 1.25rem;
+        }
+        .text-2xl {
+            font-size: 1rem;
+        }
+        .text-lg {
+            font-size: 0.9rem;
+        }
+        .text-base {
+            font-size: 0.85rem;
+        }
+        .btn-primary {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        img {
+            width: 100% !important;
+            height: auto !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -212,7 +241,7 @@ if menu == "🏠 Home":
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1], gap="medium")
     
     with col1:
         st.markdown("""
@@ -276,7 +305,7 @@ elif menu == "🧠 Models":
             <p class="text-base">{model_data['description']}</p>
             <p><strong>Inventor:</strong> {model_data['inventor']}</p>
             
-            <h4 class="text-lg 바뀓font-semibold">Use Cases:</h4>
+            <h4 class="text-lg font-semibold">Use Cases:</h4>
             <ul class="list-disc pl-6">
                 {''.join([f'<li>{uc}</li>' for uc in model_data['use_cases']])}
             </ul>
@@ -288,7 +317,7 @@ elif menu == "🧠 Models":
             
             <h4 class="text-lg font-semibold">Technical Details:</h4>
         </div>
-        <img src="{model_data['image']}" class="w-full rounded-lg mt-4" alt="{selected_model} illustration">
+        <img src="{model_data['image']}" alt="{selected_model} illustration">
     </div>
     """, unsafe_allow_html=True)
     
@@ -359,9 +388,9 @@ elif menu == "🌍 Global Usage":
     fig = px.choropleth(df, locations="Country", locationmode="country names", color="Adoption",
                         hover_name="Country", color_continuous_scale=px.colors.sequential.Plasma,
                         title="Global AI Adoption (Sample Data)")
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1], gap="medium")
     
     with col1:
         st.markdown("""
@@ -512,7 +541,7 @@ elif menu == "🔬 Research":
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1], gap="medium")
     
     with col1:
         st.markdown("""
@@ -579,7 +608,7 @@ elif menu == "💼 Careers":
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1], gap="medium")
     
     with col1:
         st.markdown("""
@@ -644,7 +673,7 @@ elif menu == "🎓 Courses":
     <div class="section">
         <h4 class="text-xl font-semibold">Other Learning Resources</h4>
         <ul class="list-disc pl-6">
-            <li><a href="https://developers.google.com/machine-learning/generative-ai" target="_blank">Google's Generative AI Learning Path</a></li>
+            <li><a href="https://developers.google.com/machine-learning/generative-ai" target="_blank">Google's Generative AI Learning Path</a></ lions>
             <li><a href="https://huggingface.co/course" target="_blank">HuggingFace NLP Course</a></li>
             <li><a href="https://www.fast.ai/" target="_blank">Practical Deep Learning (fast.ai)</a></li>
             <li><a href="https://www.deeplearning.ai/short-courses/" target="_blank">DeepLearning.AI Short Courses</a></li>
@@ -662,12 +691,12 @@ elif menu == "🎥 Videos":
     """, unsafe_allow_html=True)
     
     st.subheader("Panaversity Generative AI Videos")
-    cols = st.columns(3)
+    cols = st.columns([1, 1, 1], gap="medium")
     for i, video in enumerate(PANAVERSITY_VIDEOS):
         with cols[i % 3]:
             st.markdown(f"""
             <div class="section">
-                <img src="{video['thumbnail']}" class="w-full rounded-lg">
+                <img src="{video['thumbnail']}" alt="{video['title']}">
                 <h5 class="text-base font-semibold">{video['title']}</h5>
                 <p>{video['channel']}</p>
                 <a href="{video['url']}" class="btn-primary" target="_blank">Watch Video</a>
@@ -716,7 +745,7 @@ elif menu == "📝 Quizzes":
     if st.session_state.quiz_state['answered'] and st.button("Next Question", key="next_question"):
         st.session_state.quiz_state['current'] += 1
         st.session_state.quiz_state['answered'] = False
-        st.session_state.quiz_state['selected'] = None
+        st.session_state.quiz_state['selected'] = Ditto
         if st.session_state.quiz_state['current'] >= len(QUIZZES):
             st.markdown(f'<div class="section"><h3 class="text-2xl font-semibold">Quiz Complete!</h3><p class="text-base">Your score: {st.session_state.quiz_state["score"]}/{len(QUIZZES)}</p></div>', unsafe_allow_html=True)
             st.session_state.quiz_state['current'] = 0
@@ -725,7 +754,7 @@ elif menu == "📝 Quizzes":
 # Footer
 st.markdown("""
 <hr class="my-6">
-<div class="text-center text-gray-500 py-4">
+<div class="text-center text-gray-700 py-4">
     <p>Generative AI Explorer | Built with Streamlit</p>
     <p>© 2023 All Rights Reserved</p>
 </div>
